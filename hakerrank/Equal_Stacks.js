@@ -32,6 +32,29 @@ function readLine() {
  *  3. INTEGER_ARRAY h3
  */
 
+function setStacks(aStack, h1, bStack, h2, cStack, h3){
+    let h1Length = h1.length - 1;
+    let h2Length = h2.length - 1;
+    let h3Length = h3.length - 1;
+    
+    let aStackTotal = 0;
+    let bStackTotal = 0;
+    let cStackTotal = 0;
+    
+    for(let i=h1Length; i>=0; i--){
+        aStackTotal += h1[i];
+        aStack.push(aStackTotal);
+    }
+    for(let i=h2Length; i>=0; i--){
+        bStackTotal += h2[i];
+        bStack.push(bStackTotal);
+    }
+    for(let i=h3Length; i>=0; i--){
+        cStackTotal += h3[i];
+        cStack.push(cStackTotal);
+    }
+}
+
 function equalStacks(h1, h2, h3) {
     // Write your code here
     let aStack = [];
@@ -44,47 +67,28 @@ function equalStacks(h1, h2, h3) {
     
     let check = 0;
     
-    aStack.push(h1.pop());
-    bStack.push(h2.pop());
-    cStack.push(h3.pop());
+    setStacks(aStack, h1, bStack, h2, cStack, h3);
     
-    while(true){
-        aSum = aStack.reduce((a, b) => (a + b));
-        bSum = bStack.reduce((a, b) => (a + b));
-        cSum = cStack.reduce((a, b) => (a + b));
+    while(aStack.length !== 0 && bStack.length !== 0 && cStack.length !== 0){
+        let aHeight = aStack[aStack.length - 1];
+        let bHeight = bStack[bStack.length - 1];
+        let cHeight = cStack[cStack.length - 1];
         
-        check = aSum > bSum ? aSum > cSum ? aSum : cSum : bSum > cSum ? bSum : cSum;
-        
-        if(aSum == bSum && bSum == cSum){
-            return check;
-            //break;
+        if(aHeight === bHeight && bHeight === cHeight){
+            check = aHeight;
+            break;
         }
         
-        if(h1.length < 1 || h2.length < 1 || h3.length < 1){
-            return 0;
-            //break;
-        }
-        
-        if(check > aSum){
-            if(h1.length > 0){
-                aStack.push(h1.pop());
-            }
-        }
-        if(check > bSum){
-            if(h2.length > 0){
-                bStack.push(h2.pop());
-            }
-        }
-        if(check > cSum){
-            if(h3.length > 0){
-                cStack.push(h3.pop());
-            }
+        if(aHeight >= bHeight && aHeight >= cHeight){
+            aStack.pop();
+        }else if(bHeight >= aHeight && bHeight >= cHeight){
+            bStack.pop();
+        }else if(cHeight >= aHeight && cHeight >= bHeight){
+            cStack.pop();
         }
     }
     
-    
-
-
+    return check;
 }
 
 function main() {
