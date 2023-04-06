@@ -1,3 +1,5 @@
+// https://studyalgorithms.com/array/hackerrank-equal-stacks/
+
 'use strict';
 
 const fs = require('fs');
