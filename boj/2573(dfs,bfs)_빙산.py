@@ -103,7 +103,8 @@
 import sys
 from collections import deque
 
-def year(x_start,x_end):
+
+def year(x_start, x_end):
     """
     매년 빙하 높이 줄어들기
     - 빙하가 동시에 녹아야 하기 때문에 리스트에 좌표와 줄어드는 높이를 저장한 후
@@ -111,7 +112,7 @@ def year(x_start,x_end):
     """
     values = []
     check = False
-    for i in range(x_start,x_end):
+    for i in range(x_start, x_end):
         for j in range(m):
             if ice[i][j] > 0:
                 cut = 0
@@ -124,7 +125,7 @@ def year(x_start,x_end):
                     else:
                         if ice[qx][qy] == 0:
                             cut += 1
-                values.append([i,j,cut])
+                values.append([i, j, cut])
 
     for o in values:
         if ice[o[0]][o[1]] - o[2] > 0:
@@ -136,33 +137,22 @@ def year(x_start,x_end):
 
     return check
 
-def find_point() -> list:
+
+def find_point():
+    count = 0
     for i in range(n):
         for j in range(m):
-            if ice[i][j] > 0:
-                return [i,j]
+            if ice[i][j] > 0 and visit[i][j] == 0:
+                q.append((i, j))
+                visit[x][y] = 1
+                BFS()
+                count += 1
+    return count
 
-if __name__ == "__main__":
-    n, m = map(int, sys.stdin.readline().split())
-    ice = []
-    for _ in range(n):
-        ice.append(list(map(int, sys.stdin.readline().split())))
 
-    visit = [[0 for _ in range(m)] for _ in range(n)]
-    dx = [0,0,-1,1]
-    dy = [1,-1,0,0]
-    x = 0
-    y = 0
-    cnt = 0
-
-    q = deque()
-    point = find_point()
-    q.append((point[0], point[1]))
-    visit[point[0]][point[1]] == 1
-
-    while True:
+def BFS():
+    while q:
         x, y = q.popleft()
-        cnt += 1
 
         for k in range(4):
             nx = x + dx[k]
@@ -174,11 +164,37 @@ if __name__ == "__main__":
                 if visit[nx][ny] == 0 and ice[nx][ny] > 0:
                     visit[nx][ny] = 1
                     q.append((nx, ny))
+
+
+if __name__ == "__main__":
+    n, m = map(int, sys.stdin.readline().split())
+    ice = []
+    for _ in range(n):
+        ice.append(list(map(int, sys.stdin.readline().split())))
+
+
+    dx = [0, 0, -1, 1]
+    dy = [1, -1, 0, 0]
+    x = 0
+    y = 0
+    cnt = 0
+
+    q = deque()
+
+    while True:
+        #for u in ice:
+            #print(u)
+        visit = [[0 for _ in range(m)] for _ in range(n)]
+        point = find_point()
+        #print("point = ", point)
+        #print("==================")
+
+        if point >= 2:
+            print(cnt)
+            break
+
         is_finish = year(0, n)
         if not is_finish:
             print(0)
             break
-
-
-
-
+        cnt += 1
