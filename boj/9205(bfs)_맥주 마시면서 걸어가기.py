@@ -1,44 +1,50 @@
 import sys
+from collections import deque
 
+# 출발지에서 도착지 까지 20병으로 갈 수 있으면 더 이상 판단 필요 없음
+# 아니면 편의점 거쳐야 함
+# 가장 가까운 편의점 부터 검사해야 하는데 제일 가까운 편의점 20병 안에 못가면 끝
 t = int(sys.stdin.readline())
 
 for _ in range(t):
     n = int(sys.stdin.readline())
     location = []
+    visit = []
     for i in range(n+2):
-        location.append(list(map(int, sys.stdin.readline().split())))
+        point = list(map(int, sys.stdin.readline().split()))
+        point.append(0)
+        location.append(point)
 
     start = location[0]
     end = location[-1]
-    store = [location[1]]
-    finish = True
-
-    # 편의점 위치 담기 및 정렬
-    for j in range(2, len(location) - 1):
-        if abs(location[j][0] + location[j][1]) > abs(store[-1][0] + store[-1][1]):
+    store = []
+    if len(location) > 2:
+        for j in range(1, len(location) - 1):
             store.append(location[j])
-        else:
-            tmp = store.pop()
-            store.append(location[j])
-            store.append(tmp)
 
     # 도착 위치가 20병 안에 가면
-    if (abs(start[0] - end[0]) + abs(end[1] - end[1])) // 50 <= 20:
+    if (abs(start[0] - end[0]) + abs(start[1] - end[1])) <= 50 * 20:
         print("happy")
     else:
-        check = True
-        for j in store:
-            if (abs(start[0] - end[0]) + abs(start[1] - end[1])) // 50 <= 20:
+        q = deque()
+        q.append(start)
+        start[2] = 1
+        check = False
+
+        while q:
+            tmp = q.popleft()
+            if tmp == end:
+                check = True
                 break
-            # 제일 가까운 편의점이 20병 안에 못가면
-            if (abs(start[0] - j[0]) + abs(start[1] - j[1])) // 50 > 20:
-                check = False
-                break
-            else:
-                start = [j[0], j[1]]
+            tmp[2] = 1
+
+            for p in location:
+                if (abs(tmp[0] - p[0]) + abs(tmp[1] - p[1])) <= 50 * 20 and p[2] == 0:
+                    q.append(p)
 
         if check:
             print("happy")
         else:
             print("sad")
+
 
