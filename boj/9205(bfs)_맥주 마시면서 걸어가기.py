@@ -22,7 +22,6 @@ for _ in range(t):
         for j in range(1, len(location) - 1):
             store.append(location[j])
 
-    # 도착 위치가 20병 안에 가면
     if (abs(start[0] - end[0]) + abs(start[1] - end[1])) <= 50 * 20:
         print("happy")
     else:
@@ -30,21 +29,19 @@ for _ in range(t):
         q.append(start)
         start[2] = 1
         check = False
-
         while q:
             tmp = q.popleft()
             if tmp == end:
                 check = True
                 break
-            tmp[2] = 1
 
             for p in location:
                 if (abs(tmp[0] - p[0]) + abs(tmp[1] - p[1])) <= 50 * 20 and p[2] == 0:
+                    p[2] = 1
                     q.append(p)
 
         if check:
             print("happy")
         else:
             print("sad")
-
 
