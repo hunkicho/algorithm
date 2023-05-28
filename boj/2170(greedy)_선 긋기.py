@@ -8,17 +8,18 @@ if __name__ == "__main__":
     for _ in range(n):
         x, y = map(int, sys.stdin.readline().split())
         point.append((x, y))
-    point.sort()
+    point.sort(key = lambda t: t[0])
     
     start = point[0][0]
     end = point[0][1]
     
-    for i in range(1, len(point)):
-        if point[i][0] > start and point[i][0] > end:
+    for s, e in point:
+        if s > end:
             result += end - start
-            start = point[i][0]
+            start = s
+            end = e
             
-        if point[i][1] > end:
-            end = point[i][1]
+        elif e > end:
+            end = e
     result += end - start
     print(result)
