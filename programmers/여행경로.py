@@ -44,22 +44,77 @@
     
 #     return answer
 
-# 다른사람거 봄
 
-from collections import defaultdict
+
+
+
+
+
+
+
+from collections import defaultdict, deque
+
+
+
+
 def solution(tickets):
-    r = defaultdict(list)
-    for i,j in tickets:
-        r[i].append(j)
-    for i in r.keys():
-        r[i].sort()
 
-    s = ["ICN"]
-    p = []
-    while s:
-        q = s[-1]
-        if r[q] != []:
-            s.append(r[q].pop(0))
+    answer = ["ICN"]
+    start = ""
+    stack = deque()
+    stack.append("ICN")
+    check = 0
+
+
+    dic_ticket = defaultdict(list)
+    for way in tickets:
+
+        if way[0] in dic_ticket:
+            if dic_ticket[way[0]][-1][0] < way[1]:
+                tmp = dic_ticket[way[0]].pop()
+                dic_ticket[way[0]].append(way[1])
+                dic_ticket[way[0]].append(tmp)
+            else:
+                dic_ticket[way[0]].append(way[1])
         else:
-            p.append(s.pop())
-    return p[::-1]
+            check +=1
+            dic_ticket[way[0]].append(way[1])
+    print(dic_ticket)
+
+    def dfs(node):
+        sum = 0
+        for i in dic_ticket:
+            sum += len(dic_ticket[i])
+        print("-------------",sum,answer)
+        if sum == 0:
+            #print("asdasdas")
+            return answer
+        else:
+            dic_ticket[node].sort(reverse=True)
+            for _ in range(len(dic_ticket[node])):
+                tmp = dic_ticket[node].pop()
+                answer.append(tmp)
+                dfs(tmp)
+                answer.pop()
+                dic_ticket[node].append(tmp)
+
+    return answer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
