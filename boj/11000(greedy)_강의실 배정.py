@@ -1,16 +1,25 @@
 import sys
+from heapq import heappush, heappop
 
 if __name__ == "__main__":
-    lec = []
     n = int(sys.stdin.readline())
-    start = []
+    lec = []
+    count = 1
     end = []
-    cnt = 0
     for _ in range(n):
-        #lec.append(tuple(map(int, sys.stdin.readline().split())))
         s, e = map(int, sys.stdin.readline().split())
-        if s not in end:
-            cnt += 1
-        end.append(e)
+        lec.append((s, e))
 
-    print(cnt)
+    lec.sort()
+    end.append(lec[0][1])
+    lec_fix = lec[1:]
+
+    for i in lec_fix:
+        if i[0] < end[0]:
+            heappush(end, i[1])
+            count += 1
+        else:
+            heappop(end)
+            heappush(end, i[1])
+    print(count)
+
