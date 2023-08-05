@@ -23,7 +23,6 @@ if __name__ == "__main__":
             else:
                 next = tmp * 2 if 0 <= tmp * 1 <= 100000 else -1  
             
-            if next > 0 and line[next] == 0:
+            if next > -1 and line[next] == 0:
                 line[next] = 1
                 q.append((next, time + 1))
-                
